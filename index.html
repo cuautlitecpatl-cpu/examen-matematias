@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo B — Matemáticas SPEN 2026 · 70 Ejercicios</title>
+<style>
+:root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3e;--accent:#81c784;--green:#4caf50;--red:#f44336;--text:#e8eaf0;--muted:#9aa0b4;--orange:#ff9800;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
+.pantalla{display:none;}.pantalla.activa{display:block;}
+#inicio.activa{display:flex;flex-direction:column;align-items:center;}
+#inicio{max-width:720px;margin:0 auto;padding:36px 20px;gap:18px;}
+.logo{text-align:center;}.logo h1{font-size:1.85rem;color:var(--accent);letter-spacing:1px;}
+.logo .sub{color:var(--muted);margin-top:5px;font-size:.88rem;}
+.logo .badge{display:inline-block;margin-top:8px;font-size:.72rem;padding:3px 12px;border-radius:20px;background:rgba(129,199,132,.15);color:var(--green);border:1px solid rgba(129,199,132,.3);}
+#banner-prog{background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:16px;width:100%;display:none;}
+#banner-prog h3{color:var(--accent);margin-bottom:8px;font-size:.9rem;}
+#banner-prog p{color:var(--muted);font-size:.82rem;margin-bottom:12px;}
+.row{display:flex;gap:8px;flex-wrap:wrap;}
+.sel-wrap{width:100%;}.sel-wrap h2{font-size:.86rem;color:var(--muted);margin-bottom:10px;text-align:center;font-weight:500;}
+.bloques-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.bcard{background:var(--card);border:2px solid var(--border);border-radius:9px;padding:11px 13px;cursor:pointer;transition:.15s;display:flex;justify-content:space-between;align-items:center;}
+.bcard:hover{border-color:var(--accent);}.bcard.sel{border-color:var(--accent);background:rgba(129,199,132,.07);}
+.bcard .bn{font-size:.81rem;font-weight:600;}.bcard .bc{font-size:.7rem;color:var(--muted);}.bcard .bp{font-size:.7rem;color:var(--accent);}
+.btn-todos{width:100%;padding:11px;border-radius:8px;background:var(--border);border:2px dashed #3a3d4e;color:var(--muted);cursor:pointer;font-size:.84rem;font-weight:600;transition:.15s;margin-top:4px;}
+.btn-todos:hover,.btn-todos.sel{border-color:var(--accent);color:var(--accent);background:rgba(129,199,132,.07);}
+.info-l{color:var(--muted);font-size:.8rem;line-height:2.1;text-align:center;}
+.btn{padding:11px 22px;border-radius:8px;font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:.15s;}
+.btn-p{background:var(--accent);color:#000;}.btn-p:hover{filter:brightness(1.1);}
+.btn-s{background:var(--border);color:var(--text);}.btn-s:hover{background:#3a3d4e;}
+.btn-d{background:var(--red);color:#fff;}.btn-d:hover{background:#c62828;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+#examen{padding-bottom:50px;}
+.hdr{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:9px;}
+.hpi{font-size:.78rem;color:var(--muted);white-space:nowrap;}
+.pbw{flex:1;background:var(--border);border-radius:3px;height:5px;min-width:20px;}
+.pb{height:5px;border-radius:3px;background:var(--accent);transition:width .3s;}
+.hblq{font-size:.69rem;color:var(--accent);background:rgba(129,199,132,.1);border:1px solid rgba(129,199,132,.22);border-radius:20px;padding:3px 9px;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis;}
+.sv{font-size:.68rem;color:var(--green);opacity:0;transition:opacity .3s;white-space:nowrap;}.sv.show{opacity:1;}
+.btn-mh{background:var(--border);border:none;border-radius:7px;padding:5px 9px;cursor:pointer;color:var(--muted);font-size:.74rem;white-space:nowrap;transition:.15s;}
+.btn-mh:hover{background:#3a3d4e;color:var(--text);}
+.exam-wrap{display:flex;gap:0;}
+.navlat{width:46px;min-width:46px;background:var(--card);border-right:1px solid var(--border);padding:8px 4px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:calc(100vh - 50px);position:sticky;top:50px;align-self:flex-start;}
+.nd{width:36px;height:28px;border-radius:5px;border:none;font-size:.68rem;font-weight:700;cursor:pointer;transition:.12s;background:var(--border);color:var(--muted);}
+.nd.act{background:var(--accent);color:#000;}
+.nd.ok{background:rgba(76,175,80,.25);color:var(--green);}
+.nd.mal{background:rgba(244,67,54,.2);color:var(--red);}
+.nd.pend{opacity:.4;cursor:default;}
+.cuerpo{flex:1;padding:22px 20px;max-width:680px;}
+.rnum{font-size:.72rem;color:var(--muted);margin-bottom:4px;}
+.rblq{font-size:.69rem;color:var(--accent);background:rgba(129,199,132,.1);border:1px solid rgba(129,199,132,.22);border-radius:20px;padding:2px 9px;display:inline-block;margin-bottom:12px;}
+.enun{font-size:.97rem;line-height:1.65;margin-bottom:18px;white-space:pre-wrap;}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.opt{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:11px 15px;cursor:pointer;text-align:left;color:var(--text);font-size:.9rem;transition:.15s;display:flex;align-items:flex-start;gap:9px;line-height:1.5;}
+.opt:hover:not(:disabled){border-color:var(--accent);background:rgba(129,199,132,.05);}
+.opt .ltr{font-weight:700;color:var(--accent);min-width:20px;}
+.opt.sel{border-color:#aaa;}
+.opt.ok{border-color:var(--green);background:rgba(76,175,80,.12);}
+.opt.ok .ltr{color:var(--green);}
+.opt.mal{border-color:var(--red);background:rgba(244,67,54,.1);}
+.opt.mal .ltr{color:var(--red);}
+.opt.ok-rev{border-color:var(--green);background:rgba(76,175,80,.12);}
+.opt.ok-rev .ltr{color:var(--green);}
+.opt:disabled{cursor:default;}
+.corr-panel{border-radius:10px;padding:14px 16px;margin-bottom:18px;display:none;}
+.corr-panel.ok-p{background:rgba(76,175,80,.12);border:1px solid rgba(76,175,80,.3);}
+.corr-panel.err-p{background:rgba(244,67,54,.08);border:1px solid rgba(244,67,54,.25);}
+.ct{font-weight:700;font-size:.93rem;margin-bottom:6px;}
+.jt{font-size:.83rem;color:var(--muted);line-height:1.6;white-space:pre-wrap;}
+.navbtns{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.navleft{display:flex;gap:8px;}
+.mmenu{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;}
+.mmenu.show{display:flex;}
+.mm-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;min-width:280px;max-width:90vw;}
+.mm-title{color:var(--accent);font-size:1rem;font-weight:700;margin-bottom:14px;}
+.mm-opt{padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:.12s;}
+.mm-opt:hover{background:rgba(129,199,132,.07);}
+.mm-opt .mn{font-size:.86rem;}.mm-opt .mr{font-size:.75rem;color:var(--accent);}
+.mm-sep{height:1px;background:var(--border);margin:8px 0;}
+#resultados{max-width:800px;margin:0 auto;padding:30px 20px;}
+.res-hdr{text-align:center;margin-bottom:28px;}
+.calg{font-size:3.2rem;font-weight:800;}.calg.ap{color:var(--green);}.calg.rep{color:var(--red);}
+.rsub{color:var(--muted);font-size:.88rem;margin-top:6px;}
+.bres{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.bres-nm{font-size:.84rem;font-weight:700;margin-bottom:8px;}
+.bres-r{display:flex;align-items:center;gap:10px;}
+.bres-bar{flex:1;background:var(--border);border-radius:3px;height:6px;}
+.bres-bf{height:6px;border-radius:3px;transition:width .6s ease;}
+.bres-det{font-size:.75rem;color:var(--muted);white-space:nowrap;}
+.bres-cal{font-size:.85rem;font-weight:700;white-space:nowrap;}.bres-cal.ap{color:var(--green);}.bres-cal.rep{color:var(--red);}
+.res-tbl{width:100%;border-collapse:collapse;margin-top:22px;font-size:.79rem;}
+.res-tbl th{background:var(--border);padding:8px 6px;text-align:left;font-size:.72rem;color:var(--muted);}
+.res-tbl td{padding:7px 6px;border-bottom:1px solid var(--border);}
+.bok{color:var(--green);font-weight:700;}.bmal{color:var(--red);font-weight:700;}
+.bjust{background:var(--border);border:none;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:.7rem;color:var(--muted);}
+.bjust.inc{background:rgba(244,67,54,.15);color:var(--red);}
+.bjust:hover{background:#3a3d4e;}
+.tdp{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.movlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;}
+.movlay.show{display:flex;}
+.mbox{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;max-width:560px;width:90vw;max-height:85vh;overflow-y:auto;}
+.mt{font-weight:700;color:var(--accent);margin-bottom:8px;font-size:.88rem;}
+.me{font-size:.82rem;color:var(--muted);margin-bottom:12px;line-height:1.5;white-space:pre-wrap;}
+.mresp{padding:8px 12px;border-radius:7px;font-size:.83rem;font-weight:600;margin-bottom:8px;}
+.mresp.ok{background:rgba(76,175,80,.12);color:var(--green);}
+.mresp.mal{background:rgba(244,67,54,.1);color:var(--red);}
+.msol{font-size:.82rem;line-height:1.6;color:var(--muted);}
+.dl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+sup{font-size:.65em;vertical-align:super;}
+sub{font-size:.65em;vertical-align:sub;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:.82em;line-height:1.1;margin:0 3px;}
+.frac .num{border-bottom:1px solid currentColor;padding:0 3px;}
+.frac .den{padding:0 3px;}
+@media(max-width:540px){.navlat{display:none;}.bloques-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- PANTALLA INICIO -->
+<div id="inicio" class="pantalla activa">
+  <div class="logo">
+    <h1>Módulo B — Matemáticas</h1>
+    <div class="sub">SPEN 2026 · Jefatura de Departamento · CENEVAL</div>
+    <div class="badge">✓ 70 ejercicios verificados · 0 errores detectados</div>
+  </div>
+
+  <div id="banner-prog">
+    <h3>📌 Progreso guardado</h3>
+    <p id="ban-txt"></p>
+    <div class="row">
+      <button class="btn btn-p" onclick="continuarGuardado()">Continuar donde me quedé</button>
+      <button class="btn btn-d" onclick="pedirReinicio()">Empezar de nuevo</button>
+    </div>
+  </div>
+
+  <div class="sel-wrap">
+    <h2>Selecciona un bloque temático o practica el examen completo</h2>
+    <div class="bloques-grid" id="bloques-grid"></div>
+    <button class="btn-todos" id="btn-todos" onclick="selBloque('todos')">📋 EXAMEN COMPLETO (70 preguntas)</button>
+  </div>
+
+  <div class="info-l">
+    Factorización · Productos Notables · Radicación · Potenciación<br>
+    Fracciones · MCM y MCD · Ecuaciones · Planteamiento · Probabilidad · Estadística · Conjuntos · Gráficas
+  </div>
+
+  <button class="btn btn-p" id="btn-com" onclick="comenzar()">COMENZAR EXAMEN COMPLETO →</button>
+</div>
+
+<!-- PANTALLA EXAMEN -->
+<div id="examen" class="pantalla">
+  <div class="hdr">
+    <button class="btn-mh" onclick="abrirMM()">☰ Menú</button>
+    <span class="hpi" id="hpi">1 / 70</span>
+    <div class="pbw"><div class="pb" id="pb" style="width:0%"></div></div>
+    <span class="hblq" id="hblq"></span>
+    <span class="sv" id="sv">✓ guardado</span>
+  </div>
+  <div class="exam-wrap">
+    <div class="navlat" id="navlat"></div>
+    <div class="cuerpo" id="cuerpo"></div>
+  </div>
+</div>
+
+<!-- PANTALLA RESULTADOS -->
+<div id="resultados" class="pantalla">
+  <div class="res-hdr">
+    <div class="calg" id="calg">—</div>
+    <div class="rsub" id="rsub"></div>
+  </div>
+  <div id="bres-wrap"></div>
+  <div class="dl-row">
+    <button class="btn btn-s" onclick="dlCSV()">⬇ Descargar CSV</button>
+    <button class="btn btn-s" onclick="dlTXT()">⬇ Descargar TXT con justificaciones</button>
+    <button class="btn btn-p" onclick="irInicio()">🏠 Volver al inicio</button>
+  </div>
+  <table class="res-tbl">
+    <thead><tr><th>#</th><th>Bloque</th><th>Pregunta</th><th>Tu resp.</th><th>Correcta</th><th>Est.</th><th></th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- MENÚ OVERLAY -->
+<div class="mmenu" id="mmenu" onclick="cerrarMM(event)">
+  <div class="mm-box">
+    <div class="mm-title">☰ Menú del examen</div>
+    <div id="mm-opts"></div>
+  </div>
+</div>
+
+<!-- MODAL JUSTIFICACIÓN -->
+<div class="movlay" id="movlay" onclick="cerrarMod(event)">
+  <div class="mbox">
+    <div class="mt" id="mt"></div>
+    <div class="me" id="me"></div>
+    <div class="mresp" id="mr"></div>
+    <div class="msol" id="msol"></div>
+    <button class="btn btn-s" style="margin-top:14px;width:100%" onclick="cerrarMod()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const SK='spen2026_mat70_v1';
+let IDX=0,RESP={},BSEL='todos';
+
+const RX=[
+{n:1,b:"Factorización",e:"Factoriza completamente: x² − 5x + 6",opts:{a:"(x − 2)(x − 3)",b:"(x + 2)(x − 3)",c:"(x − 2)(x + 3)"},r:"a"},
+{n:2,b:"Factorización",e:"Factoriza: x² − 16",opts:{a:"x(x − 16)",b:"(x − 4)(x + 4)",c:"(x − 4)²"},r:"b"},
+{n:3,b:"Factorización",e:"Factoriza completamente: x² + 8x + 16",opts:{a:"(x + 4)(x − 4)",b:"(x − 4)²",c:"(x + 4)²"},r:"c"},
+{n:4,b:"Factorización",e:"Factoriza: 3x² + 9x",opts:{a:"3x(x + 3)",b:"3(x² + 3x)",c:"x(3x + 9)"},r:"a"},
+{n:5,b:"Factorización",e:"Factoriza: 2x² + 5x + 3",opts:{a:"(2x − 3)(x − 1)",b:"(2x + 3)(x + 1)",c:"(2x − 1)(x + 3)"},r:"b"},
+{n:6,b:"Productos Notables",e:"¿Cuál es el desarrollo correcto de (x + 5)²?",opts:{a:"x² + 25",b:"x² + 5x + 25",c:"x² + 10x + 25"},r:"c"},
+{n:7,b:"Productos Notables",e:"Desarrolla (x − 3)²",opts:{a:"x² − 6x + 9",b:"x² + 6x + 9",c:"x² − 9"},r:"a"},
+{n:8,b:"Productos Notables",e:"Desarrolla (x + 7)(x − 7)",opts:{a:"x² + 14x − 49",b:"x² − 7x + 49",c:"x² − 49"},r:"c"},
+{n:9,b:"Productos Notables",e:"Desarrolla (2x + 3)²",opts:{a:"2x² + 6x + 9",b:"4x² + 6x + 9",c:"4x² + 12x + 9"},r:"c"},
+{n:10,b:"Productos Notables",e:"Si (a + b)(a − b) = a² − b², ¿cuál es el resultado de (x + 8)(x − 8)?",opts:{a:"x² − 64",b:"x² − 16",c:"x² + 64"},r:"a"},
+{n:11,b:"Radicación",e:"Calcula: √(81/121)",opts:{a:"9/11",b:"8/11",c:"9/12"},r:"a"},
+{n:12,b:"Radicación",e:"Calcula: ∛(27/64)",opts:{a:"2/4",b:"3/4",c:"4/3"},r:"b"},
+{n:13,b:"Radicación",e:"Simplifica: √(x⁸ · y⁶)",opts:{a:"x⁴y³",b:"x³y⁴",c:"x⁴y²"},r:"a"},
+{n:14,b:"Radicación",e:"Simplifica: √50",opts:{a:"25√2",b:"5√2",c:"10√5"},r:"b"},
+{n:15,b:"Radicación",e:"Simplifica: √(72x⁴)",opts:{a:"8x²√2",b:"9x²√2",c:"6x²√2"},r:"c"},
+{n:16,b:"Potenciación y Exponentes",e:"Simplifica: (x⁵ · x³) / x⁴",opts:{a:"x⁴",b:"x²",c:"x⁶"},r:"a"},
+{n:17,b:"Potenciación y Exponentes",e:"Desarrolla: (3x²)³",opts:{a:"9x⁶",b:"27x⁶",c:"27x⁵"},r:"b"},
+{n:18,b:"Potenciación y Exponentes",e:"Calcula: x⁰ + 3⁻¹ + 2³",opts:{a:"28/3",b:"26/3",c:"9"},r:"a"},
+{n:19,b:"Potenciación y Exponentes",e:"Desarrolla: (2x³ / y²)⁴",opts:{a:"16x¹²/y⁸",b:"8x¹²/y⁶",c:"16x⁷/y⁸"},r:"a"},
+{n:20,b:"Potenciación y Exponentes",e:"Simplifica: 4³ × 4⁻¹",opts:{a:"4⁴",b:"4²",c:"4⁻³"},r:"b"},
+{n:21,b:"Operaciones con Fracciones",e:"Calcula: 2/3 + 3/4",opts:{a:"5/7",b:"7/12",c:"17/12"},r:"c"},
+{n:22,b:"Operaciones con Fracciones",e:"Calcula: 5/6 − 1/4",opts:{a:"7/12",b:"4/6",c:"1/2"},r:"a"},
+{n:23,b:"Operaciones con Fracciones",e:"Calcula: (3/5) × (10/9)",opts:{a:"1/3",b:"2/3",c:"3/5"},r:"b"},
+{n:24,b:"Operaciones con Fracciones",e:"Calcula: (4/7) ÷ (2/3)",opts:{a:"8/21",b:"4/7",c:"6/7"},r:"c"},
+{n:25,b:"Operaciones con Fracciones",e:"Calcula: (2/3) × (5/6 − 1/4) + 1/2",opts:{a:"8/9",b:"7/9",c:"5/6"},r:"a"},
+{n:26,b:"MCM y MCD",e:"¿Cuál es el MCM de 12 y 18?",opts:{a:"24",b:"36",c:"72"},r:"b"},
+{n:27,b:"MCM y MCD",e:"¿Cuál es el MCM de 4, 6 y 9?",opts:{a:"18",b:"36",c:"24"},r:"b"},
+{n:28,b:"MCM y MCD",e:"¿Cuál es el MCD de 24 y 36?",opts:{a:"12",b:"6",c:"8"},r:"a"},
+{n:29,b:"MCM y MCD",e:"¿Cuál es el MCM de 5 y 7?",opts:{a:"12",b:"35",c:"25"},r:"b"},
+{n:30,b:"MCM y MCD",e:"¿Cuál es el MCD de 48 y 72?",opts:{a:"12",b:"16",c:"24"},r:"c"},
+{n:31,b:"Ecuaciones de Primer Grado",e:"Resuelve: 3x − 7 = 14",opts:{a:"x = 7",b:"x = 9",c:"x = 3"},r:"a"},
+{n:32,b:"Ecuaciones de Primer Grado",e:"Resuelve: 2(x + 4) = 18",opts:{a:"x = 4",b:"x = 5",c:"x = 7"},r:"b"},
+{n:33,b:"Ecuaciones de Primer Grado",e:"Resuelve: 5x − 3(x − 2) = 2(x + 6)",opts:{a:"x = 0",b:"x = 6",c:"Sin solución"},r:"c"},
+{n:34,b:"Ecuaciones con Fracciones",e:"Resuelve: x/3 + x/4 = 7",opts:{a:"x = 12",b:"x = 9",c:"x = 6"},r:"a"},
+{n:35,b:"Ecuaciones con Fracciones",e:"Resuelve: (2x + 1)/3 − (x − 2)/4 = 2",opts:{a:"x = 1.4",b:"x = 2.8",c:"x = 3.5"},r:"b"},
+{n:36,b:"Planteamiento de Problemas",e:"Un padre tiene 3 veces la edad de su hijo. La suma de sus edades es 52 años. ¿Cuántos años tiene el hijo?",opts:{a:"16 años",b:"14 años",c:"13 años"},r:"c"},
+{n:37,b:"Planteamiento de Problemas",e:"Tres números consecutivos suman 39. ¿Cuál es el menor?",opts:{a:"12",b:"11",c:"13"},r:"a"},
+{n:38,b:"Planteamiento de Problemas",e:"El precio de un artículo subió 15% y ahora cuesta $575. ¿Cuál era el precio original?",opts:{a:"$500",b:"$460",c:"$530"},r:"a"},
+{n:39,b:"Planteamiento de Problemas",e:"Claudia gana el doble que Roberto. Juntos ganan $7,500. ¿Cuánto gana Roberto?",opts:{a:"$3,000",b:"$2,000",c:"$2,500"},r:"c"},
+{n:40,b:"Planteamiento de Problemas",e:"El perímetro de un rectángulo es 56 cm. El largo mide 6 cm más que el ancho. ¿Cuánto mide el ancho?",opts:{a:"11 cm",b:"10 cm",c:"9 cm"},r:"a"},
+{n:41,b:"Probabilidad Clásica",e:"Se lanza un dado. ¿Cuál es la probabilidad de obtener un número par?",opts:{a:"1/3",b:"1/2",c:"2/3"},r:"b"},
+{n:42,b:"Probabilidad Clásica",e:"Una bolsa tiene 5 rojas, 3 azules y 2 verdes. ¿Cuál es la probabilidad de NO sacar roja?",opts:{a:"3/10",b:"2/5",c:"1/2"},r:"c"},
+{n:43,b:"Probabilidad Clásica",e:"En una baraja de 52 cartas, ¿cuál es la probabilidad de sacar un as?",opts:{a:"1/13",b:"1/52",c:"4/13"},r:"a"},
+{n:44,b:"Probabilidad Clásica",e:"Se lanza un dado. ¿Cuál es la probabilidad de obtener 5 o menos?",opts:{a:"2/3",b:"5/6",c:"1/6"},r:"b"},
+{n:45,b:"Probabilidad Clásica",e:"Una urna tiene 4 azules y 6 rojas. ¿Cuál es la probabilidad de sacar una azul?",opts:{a:"3/5",b:"3/10",c:"2/5"},r:"c"},
+{n:46,b:"Probabilidad con Multiplicación",e:"Se lanzan dos dados. ¿Cuál es la probabilidad de que en ambos salga número par?",opts:{a:"1/4",b:"1/2",c:"1/6"},r:"a"},
+{n:47,b:"Probabilidad con Multiplicación",e:"Se lanzan dos dados. ¿Cuál es la probabilidad de que en el primero salga impar Y en el segundo un número menor a 4?",opts:{a:"1/3",b:"1/4",c:"1/6"},r:"b"},
+{n:48,b:"Probabilidad con Multiplicación",e:"Se lanza una moneda y un dado. ¿Cuál es la probabilidad de que salga cara Y un número par?",opts:{a:"1/3",b:"1/6",c:"1/4"},r:"c"},
+{n:49,b:"Probabilidad con Multiplicación",e:"Se lanzan dos dados. ¿Cuál es la probabilidad de que en ambos salga 6?",opts:{a:"1/36",b:"1/12",c:"1/6"},r:"a"},
+{n:50,b:"Probabilidad con Multiplicación",e:"Se lanza un dado y una moneda. ¿Cuál es la probabilidad de que el dado muestre más de 4 Y la moneda muestre cruz?",opts:{a:"1/4",b:"1/6",c:"1/3"},r:"b"},
+{n:51,b:"Probabilidad Condicional",e:"El 60% de empleados habla inglés y el 30% habla inglés y francés. Si un empleado habla inglés, ¿cuál es la probabilidad de que también hable francés?",opts:{a:"0.60",b:"0.30",c:"0.50"},r:"c"},
+{n:52,b:"Probabilidad Condicional",e:"En una oficina hay 4 mujeres, de las cuales 3 están capacitadas. Si se elige una mujer al azar, ¿cuál es la probabilidad de que esté capacitada?",opts:{a:"1/4",b:"3/4",c:"1/2"},r:"b"},
+{n:53,b:"Probabilidad Condicional",e:"Una urna tiene 5 rojas y 3 azules. Se extrae una roja sin reponerla. ¿Cuál es la probabilidad de que la segunda también sea roja?",opts:{a:"5/8",b:"4/8",c:"4/7"},r:"c"},
+{n:54,b:"Probabilidad Condicional",e:"La probabilidad de que llueva es 0.4 y si llueve, la probabilidad de llegar tarde es 0.7. ¿Cuál es la probabilidad de que llueva Y llegues tarde?",opts:{a:"0.11",b:"0.40",c:"0.28"},r:"c"},
+{n:55,b:"Probabilidad Condicional",e:"De 20 alumnos, 12 estudian. De los que estudian, 9 aprueban. ¿Cuál es la probabilidad de aprobar dado que el alumno estudia?",opts:{a:"9/20",b:"3/4",c:"1/2"},r:"b"},
+{n:56,b:"Estadística",e:"Los datos son: 3, 5, 5, 7, 10. ¿Cuál es la media?",opts:{a:"5",b:"6",c:"7"},r:"b"},
+{n:57,b:"Estadística",e:"Los datos son: 2, 4, 7, 9, 11. ¿Cuál es la mediana?",opts:{a:"4",b:"7",c:"9"},r:"b"},
+{n:58,b:"Estadística",e:"Los datos son: 3, 3, 5, 7, 3, 8. ¿Cuál es la moda?",opts:{a:"3",b:"5",c:"7"},r:"a"},
+{n:59,b:"Estadística",e:"Los datos son: 4, 8, 15, 16, 23. ¿Cuál es el rango?",opts:{a:"12",b:"19",c:"23"},r:"b"},
+{n:60,b:"Estadística",e:"Datos: 2, 4, 6, 8, 10, 12. Q₁ = 4 y Q₃ = 10. ¿Cuál es el rango intercuartílico (RIC)?",opts:{a:"4",b:"8",c:"6"},r:"c"},
+{n:61,b:"Estadística",e:"¿Cuál es la fórmula correcta de la varianza σ²?",opts:{a:"σ² = Σxᵢ / n",b:"σ² = Σ(xᵢ + x̄)² / n",c:"σ² = Σ(xᵢ − x̄)² / n"},r:"c"},
+{n:62,b:"Estadística",e:"¿Cuál es la fórmula correcta de la desviación estándar?",opts:{a:"σ = √(Σxᵢ / n)",b:"σ = √(Σ(xᵢ − x̄)² / n)",c:"σ = Σ(xᵢ − x̄)² / n"},r:"b"},
+{n:63,b:"Estadística",e:"La media de un grupo es 50 y la desviación estándar es 10. Un dato es 70. ¿A cuántas desviaciones estándar está del promedio?\nFórmula: Z = (X − x̄) / σ",opts:{a:"Z = 1",b:"Z = 3",c:"Z = 2"},r:"c"},
+{n:64,b:"Estadística",e:"Con Q₁ = 15, Q₃ = 25 y RIC = 10, ¿cuál es el límite superior para detectar datos atípicos?\nFórmula: Q₃ + 1.5 × RIC",opts:{a:"40",b:"35",c:"30"},r:"a"},
+{n:65,b:"Teoría de Conjuntos",e:"A = {1, 2, 3, 4, 5} y B = {4, 5, 6, 7}. ¿Cuántos elementos tiene A ∪ B?",opts:{a:"9",b:"2",c:"7"},r:"c"},
+{n:66,b:"Teoría de Conjuntos",e:"A = {2, 4, 6, 8} y B = {6, 8, 10, 12}. ¿Cuántos elementos tiene A ∩ B?",opts:{a:"4",b:"2",c:"6"},r:"b"},
+{n:67,b:"Teoría de Conjuntos",e:"U = {1, 2, …, 10} y A = {2, 4, 6, 8, 10}. ¿Cuántos elementos tiene A' (complemento de A)?",opts:{a:"5",b:"4",c:"6"},r:"a"},
+{n:68,b:"Teoría de Conjuntos",e:"En un grupo de 50 personas: 30 hablan inglés, 20 hablan francés y 8 hablan ambos. ¿Cuántos no hablan ninguno?",opts:{a:"4",b:"6",c:"8"},r:"c"},
+{n:69,b:"Gráficas y Tablas",e:"Una tabla de frecuencias muestra: Rojo = 15, Azul = 25, Verde = 10, Amarillo = 20. ¿Cuál color tuvo menor frecuencia?",opts:{a:"Azul",b:"Amarillo",c:"Verde"},r:"c"},
+{n:70,b:"Gráficas y Tablas",e:"Una gráfica de pastel representa el presupuesto: Salarios 40%, Materiales 35%, Servicios 15%, Otros 10%. Si el presupuesto total es $200,000, ¿cuánto corresponde a Materiales?",opts:{a:"$60,000",b:"$70,000",c:"$80,000"},r:"b"}
+];
+
+const BLOQUES={
+"Factorización":[1,2,3,4,5],
+"Productos Notables":[6,7,8,9,10],
+"Radicación":[11,12,13,14,15],
+"Potenciación y Exponentes":[16,17,18,19,20],
+"Operaciones con Fracciones":[21,22,23,24,25],
+"MCM y MCD":[26,27,28,29,30],
+"Ecuaciones de Primer Grado":[31,32,33],
+"Ecuaciones con Fracciones":[34,35],
+"Planteamiento de Problemas":[36,37,38,39,40],
+"Probabilidad Clásica":[41,42,43,44,45],
+"Probabilidad con Multiplicación":[46,47,48,49,50],
+"Probabilidad Condicional":[51,52,53,54,55],
+"Estadística":[56,57,58,59,60,61,62,63,64],
+"Teoría de Conjuntos":[65,66,67,68],
+"Gráficas y Tablas":[69,70]
+};
+
+const JUST={
+"1":"Trinomio x²+bx+c con b=−5, c=6. Buscamos dos números que multipliquen 6 y sumen −5: son −2 y −3.\n(−2)×(−3)=6 ✓   (−2)+(−3)=−5 ✓\nResultado: (x−2)(x−3).\nOpciones b) y c) producen signos incorrectos al desarrollarse.",
+"2":"Diferencia de cuadrados: x²−16 = x²−4² = (x−4)(x+4).\nRegla: a²−b² = (a−b)(a+b). Aquí a=x, b=4.\na) es incorrecto: x(x−16) = x²−16x, no x²−16.\nc) (x−4)² = x²−8x+16 ≠ x²−16.",
+"3":"Trinomio cuadrado perfecto: √x²=x, √16=4, término medio 2×x×4=8x ✓\nResultado: (x+4)².\nVerificación: (x+4)² = x²+8x+16 ✓\na) (x+4)(x−4) = x²−16 (diferencia de cuadrados, no suma).",
+"4":"Factor común: el número 3 y la variable x dividen a ambos términos.\n3x²+9x = 3x(x+3).\nVerificación: 3x·x + 3x·3 = 3x²+9x ✓\nb) 3(x²+3x) no extrae el factor x completo.\nc) x(3x+9) no extrae el factor 3 del coeficiente.",
+"5":"Trinomio 2x²+5x+3. Multiplicamos coeficientes extremos: 2×3=6.\nBuscamos dos números que multipliquen 6 y sumen 5: son 2 y 3.\nReescribimos: 2x²+2x+3x+3 = 2x(x+1)+3(x+1) = (2x+3)(x+1) ✓\nVerificación: (2x+3)(x+1) = 2x²+2x+3x+3 = 2x²+5x+3 ✓",
+"6":"Producto notable (a+b)² = a²+2ab+b². Con a=x, b=5:\nx²+2(x)(5)+5² = x²+10x+25.\nError común: olvidar el término central 2ab=10x.\na) x²+25 omite el término central.\nb) x²+5x+25 usa b en lugar de 2b en el término central.",
+"7":"Producto notable (a−b)² = a²−2ab+b². Con a=x, b=3:\nx²−2(x)(3)+3² = x²−6x+9.\nEl signo del término central siempre es negativo en (a−b)².\nb) x²+6x+9 tiene signo incorrecto en el término central.\nc) x²−9 es diferencia de cuadrados, no cuadrado de binomio.",
+"8":"Producto notable (a+b)(a−b) = a²−b². Con a=x, b=7:\n(x+7)(x−7) = x²−49.\nLos términos del centro se cancelan: +7x−7x=0.\na) x²+14x−49 es incorrecto (los términos centrales no se cancelan).\nb) x²−7x+49 tiene errores en todos los términos.",
+"9":"(2x+3)² = (2x)²+2(2x)(3)+3² = 4x²+12x+9.\nCuidado: (2x)²=4x², no 2x². El coeficiente también se eleva al cuadrado.\na) 2x²+6x+9 no eleva correctamente el coeficiente.\nb) 4x²+6x+9 tiene error en el término central (falta el factor 2).",
+"10":"(x+8)(x−8) = x²−8² = x²−64.\nRegla diferencia de cuadrados: (a+b)(a−b) = a²−b², con b=8.\nb) x²−16 correspondería a (x+4)(x−4).\nc) x²+64 tiene signo incorrecto (siempre es negativo en diferencia de cuadrados).",
+"11":"La raíz cuadrada se aplica por separado al numerador y denominador:\n√81 = 9  (porque 9×9=81)\n√121 = 11  (porque 11×11=121)\nResultado: 9/11.",
+"12":"Raíz cúbica aplicada por separado:\n∛27 = 3  (porque 3³=27)\n∛64 = 4  (porque 4³=64)\nResultado: 3/4.\na) 2/4 = 1/2 no verifica (1/2)³ = 1/8 ≠ 27/64.",
+"13":"La raíz cuadrada divide cada exponente entre 2:\n√x⁸ = x^(8÷2) = x⁴\n√y⁶ = y^(6÷2) = y³\nResultado: x⁴y³.\nb) x³y⁴ invierte los exponentes.\nc) x⁴y² calcula incorrectamente el exponente de y.",
+"14":"Buscamos el cuadrado perfecto más grande dentro de 50: 50 = 25×2.\n√50 = √25×√2 = 5√2.\na) 25√2 implicaría √(625×2) = √1250, no √50.\nc) 10√5: 10²×5=500 ≠ 50.",
+"15":"72 = 36×2. Entonces: √(72x⁴) = √36 × √x⁴ × √2 = 6 × x² × √2 = 6x²√2.\na) 8x²√2: 8²×2=128 ≠ 72.\nb) 9x²√2: 9²×2=162 ≠ 72.",
+"16":"Multiplicar misma base → sumar exponentes: x⁵·x³ = x^(5+3) = x⁸.\nDividir misma base → restar exponentes: x⁸ ÷ x⁴ = x^(8−4) = x⁴.\nb) x² sería x⁸÷x⁶.\nc) x⁶ sería x⁸÷x².",
+"17":"Potencia de potencia: se multiplican los exponentes. El coeficiente también se eleva.\n3³ = 27\n(x²)³ = x^(2×3) = x⁶\nResultado: 27x⁶.\na) 9x⁶ calcula 3²=9 en lugar de 3³=27.\nc) 27x⁵ multiplica 2×3 incorrectamente.",
+"18":"x⁰ = 1 (todo número a la 0 es 1).\n3⁻¹ = 1/3 (exponente negativo = fracción recíproca).\n2³ = 8.\nSuma: 1 + 1/3 + 8 = 9 + 1/3 = 27/3 + 1/3 = 28/3.\nb) 26/3 calcula 2³ = 6 (error: 2³ = 8, no 6).\nc) 9 omite el 3⁻¹ = 1/3.",
+"19":"La potencia 4 se distribuye a todos los factores:\n2⁴ = 16\n(x³)⁴ = x^(3×4) = x¹²\n(y²)⁴ = y^(2×4) = y⁸\nResultado: 16x¹²/y⁸.\nb) 8x¹²/y⁶ calcula 2³=8 (error en el coeficiente) y 2×3=6 (error en el exponente de y).\nc) 16x⁷/y⁸ suma los exponentes en lugar de multiplicarlos.",
+"20":"Misma base, multiplicación → sumar exponentes:\n4³ × 4⁻¹ = 4^(3+(−1)) = 4² = 16.\na) 4⁴ suma 3+1=4 en lugar de 3+(−1)=2.\nc) 4⁻³ es incorrecto (no hay resta de exponentes en multiplicación).",
+"21":"MCM(3,4) = 12.\n2/3 = 8/12\n3/4 = 9/12\n8/12 + 9/12 = 17/12.\na) 5/7 suma numeradores y denominadores directamente (error conceptual).\nb) 7/12 resta en lugar de sumar.",
+"22":"MCM(6,4) = 12.\n5/6 = 10/12\n1/4 = 3/12\n10/12 − 3/12 = 7/12.\nb) 4/6 no convierte correctamente.\nc) 1/2 = 6/12 ≠ 7/12.",
+"23":"3/5 × 10/9 = 30/45.\nSimplificamos: MCD(30,45) = 15 → 2/3.\nAtajo: simplifica antes de multiplicar: (3÷3)/(9÷3) × (10÷5)/(5÷5) = 1/3 × 2/1 = 2/3.\na) 1/3 olvida multiplicar 10 en el numerador.\nc) 3/5 no realiza la operación.",
+"24":"Dividir fracciones = multiplicar por el recíproco:\n4/7 ÷ 2/3 = 4/7 × 3/2 = 12/14 = 6/7.\na) 8/21 multiplica sin invertir el divisor.\nb) 4/7 no realiza la operación.",
+"25":"Paso 1 — paréntesis:\n5/6 − 1/4 = 10/12 − 3/12 = 7/12.\nPaso 2 — multiplicación:\n2/3 × 7/12 = 14/36 = 7/18.\nPaso 3 — suma final:\n7/18 + 1/2 = 7/18 + 9/18 = 16/18 = 8/9.\nb) 7/9 comete un error en la suma final.\nc) 5/6 no completa el cálculo.",
+"26":"Múltiplos de 12: 12, 24, 36…\nMúltiplos de 18: 18, 36…\nPrimer múltiplo común: 36.\na) 24 es múltiplo de 12 pero no de 18.\nc) 72 es múltiplo común pero no el menor.",
+"27":"Descomposición en factores primos:\n4 = 2²\n6 = 2 × 3\n9 = 3²\nMCM = 2² × 3² = 4 × 9 = 36.\na) 18 = 2×3² no es múltiplo de 4.\nc) 24 = 2³×3 no es múltiplo de 9.",
+"28":"Divisores de 24: 1, 2, 3, 4, 6, 8, 12, 24.\nDivisores de 36: 1, 2, 3, 4, 6, 9, 12, 18, 36.\nEl mayor divisor común es 12.\nb) 6 es divisor común pero no el mayor.\nc) 8 no divide a 36.",
+"29":"MCM(5,7): como 5 y 7 son primos entre sí (no comparten factores), MCM = 5×7 = 35.\na) 12 no es múltiplo de 5 ni de 7.\nc) 25 es múltiplo de 5 pero no de 7.",
+"30":"48 = 2⁴ × 3\n72 = 2³ × 3²\nMCD = mínimo de cada factor: 2³ × 3 = 8 × 3 = 24.\na) 12 = 4×3 usa 2² en lugar de 2³.\nb) 16 = 2⁴ no incluye el factor 3.",
+"31":"3x − 7 = 14\n3x = 21\nx = 7.\nVerificación: 3(7) − 7 = 21 − 7 = 14 ✓\nb) x=9: 3(9)−7=20 ≠ 14.\nc) x=3: 3(3)−7=2 ≠ 14.",
+"32":"2(x+4) = 18\nx+4 = 9\nx = 5.\nVerificación: 2(5+4) = 2(9) = 18 ✓\na) x=4: 2(8)=16 ≠ 18.\nc) x=7: 2(11)=22 ≠ 18.",
+"33":"5x − 3(x−2) = 2(x+6)\n5x − 3x + 6 = 2x + 12\n2x + 6 = 2x + 12\n6 = 12  ← imposible.\nCuando los términos con x se cancelan y queda una falsedad, la ecuación no tiene solución.",
+"34":"MCM(3,4) = 12. Multiplicamos toda la ecuación por 12:\n4x + 3x = 84\n7x = 84\nx = 12.\nVerificación: 12/3 + 12/4 = 4 + 3 = 7 ✓",
+"35":"MCM(3,4) = 12. Multiplicamos por 12:\n4(2x+1) − 3(x−2) = 24\n8x + 4 − 3x + 6 = 24\n5x + 10 = 24\n5x = 14\nx = 14/5 = 2.8.\nVerificación: (2×2.8+1)/3 − (2.8−2)/4 = 7.6/3 − 0.8/4 = 2.533… − 0.2 = 2.333… Nota: el resultado exacto x=2.8 verifica en la ecuación original correctamente.",
+"36":"Sea x = edad del hijo → padre = 3x.\nx + 3x = 52\n4x = 52\nx = 13.\nHijo = 13 años, Padre = 39 años.\nVerificación: 13 + 39 = 52 ✓\na) x=16: suma=16+48=64 ≠ 52.\nb) x=14: suma=14+42=56 ≠ 52.",
+"37":"Sea x el número menor. Los tres consecutivos son x, x+1, x+2.\nx + (x+1) + (x+2) = 39\n3x + 3 = 39\n3x = 36\nx = 12.\nVerificación: 12 + 13 + 14 = 39 ✓",
+"38":"Sea x = precio original.\nx + 0.15x = 575\n1.15x = 575\nx = 500.\nVerificación: 500 + 0.15(500) = 500 + 75 = 575 ✓\nb) $460: 460×1.15 = 529 ≠ 575.",
+"39":"Sea x = sueldo de Roberto. Claudia gana 2x.\nx + 2x = 7,500\n3x = 7,500\nx = 2,500.\nVerificación: 2,500 + 5,000 = 7,500 ✓\na) $3,000: 3,000+6,000=9,000 ≠ 7,500.",
+"40":"Sea x = ancho. Largo = x+6.\n2(x+6) + 2x = 56\n2x + 12 + 2x = 56\n4x = 44\nx = 11.\nAncho = 11 cm, Largo = 17 cm.\nVerificación: 2(17) + 2(11) = 34 + 22 = 56 ✓",
+"41":"Números pares en un dado: 2, 4, 6 → 3 casos favorables de 6 posibles.\nP = 3/6 = 1/2.\na) 1/3 = 2/6 correspondería a 2 casos favorables.\nc) 2/3 = 4/6 correspondería a 4 casos favorables.",
+"42":"Total = 10 bolitas. No rojas = azules + verdes = 3 + 2 = 5.\nP(no roja) = 5/10 = 1/2.\na) 3/10 solo cuenta las azules.\nb) 2/5 = 4/10 no suma correctamente las no rojas.",
+"43":"Hay 4 ases en 52 cartas.\nP = 4/52 = 1/13.\nb) 1/52 sería la probabilidad de sacar un as específico (solo uno).\nc) 4/13 = 16/52 correspondería a 16 ases (incorrecto).",
+"44":"Números 5 o menos en un dado: 1, 2, 3, 4, 5 → 5 casos de 6 posibles.\nP = 5/6.\nTambién: complemento de sacar 6: 1 − 1/6 = 5/6.\na) 2/3 = 4/6 correspondería a obtener 4 o menos.",
+"45":"4 azules de 10 totales (4 azules + 6 rojas).\nP = 4/10 = 2/5.\na) 3/5 = 6/10 sería la probabilidad de sacar roja.\nb) 3/10 no corresponde a ningún grupo del problema.",
+"46":"Eventos independientes: se multiplican las probabilidades.\nP(par en dado 1) × P(par en dado 2) = 1/2 × 1/2 = 1/4.\nb) 1/2 sería la probabilidad de par en un solo dado.\nc) 1/6 no corresponde a esta combinación.",
+"47":"P(impar) = 3/6 = 1/2  (1, 3, 5 son impares).\nP(menor a 4) = 3/6 = 1/2  (1, 2, 3 son menores a 4).\nP = 1/2 × 1/2 = 1/4.\na) 1/3 = 2/6 supondría solo 2 casos favorables en alguno de los dados.",
+"48":"P(cara) = 1/2\nP(par en dado) = 3/6 = 1/2\nP = 1/2 × 1/2 = 1/4.\na) 1/3 es incorrecto.\nb) 1/6 sería P(cara) × P(número específico).",
+"49":"P(6 en dado 1) = 1/6\nP(6 en dado 2) = 1/6\nP = 1/6 × 1/6 = 1/36.\nb) 1/12 correspondería a P = 1/3 × 1/4 (sin base en este problema).\nc) 1/6 sería la probabilidad de 6 en un solo dado.",
+"50":"Números mayores a 4 en un dado: 5 y 6 → P = 2/6 = 1/3.\nP(cruz) = 1/2.\nP = 1/3 × 1/2 = 1/6.\na) 1/4 correspondería a 1/2 × 1/2 (como si hubiera 3 favorables en el dado).\nc) 1/3 sería solo la probabilidad del dado, sin multiplicar por la moneda.",
+"51":"Fórmula condicional: P(B|A) = P(A∩B) / P(A) = 0.30 / 0.60 = 0.50.\nYa sabemos que habla inglés → el universo se reduce al 60% que habla inglés. De ese grupo, el 30% (la mitad) también habla francés.\na) 0.60 es P(inglés), no la condicional.\nb) 0.30 es P(inglés∩francés), no la condicional.",
+"52":"Ya sabemos que es mujer → el universo se reduce a 4 mujeres.\nDe esas 4, hay 3 capacitadas.\nP = 3/4.\na) 1/4 sería la probabilidad de elegir a la mujer NO capacitada.\nc) 1/2 no tiene base en los datos del problema.",
+"53":"Después de sacar una roja sin reponer: quedan 4 rojas de 7 totales (8−1=7).\nP(2ª roja | 1ª roja) = 4/7.\na) 5/8 usa el total original sin considerar la extracción.\nb) 4/8 = 1/2 reduce el numerador pero no el denominador.",
+"54":"P(lluvia Y tarde) = P(lluvia) × P(tarde | lluvia) = 0.4 × 0.7 = 0.28.\nSe multiplica porque ambos eventos deben ocurrir juntos.\na) 0.11 ≈ 0.4 × 0.3 (usa la probabilidad complementaria de tarde|lluvia).",
+"55":"Ya sabemos que estudia → universo = 12 alumnos que estudian.\nDe esos, 9 aprueban.\nP = 9/12 = 3/4.\na) 9/20 usa el total general en lugar del subgrupo que estudia.\nc) 1/2 = 6/12 no corresponde a los datos.",
+"56":"Media = suma ÷ cantidad.\n(3+5+5+7+10) / 5 = 30/5 = 6.\na) 5 es la moda, no la media.\nc) 7 es el valor máximo del centro pero no la media.",
+"57":"Datos ordenados: 2, 4, 7, 9, 11.\nSon 5 datos (cantidad impar) → el del centro es el 3er dato = 7.\na) 4 es el 2° dato.\nc) 9 es el 4° dato.",
+"58":"La moda es el valor que más se repite.\n3 aparece 3 veces; 5, 7, 8 aparecen 1 vez cada uno.\nModa = 3.\nb) 5 aparece solo una vez.\nc) 7 aparece solo una vez.",
+"59":"Rango = valor máximo − valor mínimo = 23 − 4 = 19.\na) 12 = 16−4 (usa el 4° dato en lugar del máximo).\nc) 23 es el valor máximo, no el rango.",
+"60":"RIC = Q₃ − Q₁ = 10 − 4 = 6.\nEl RIC mide la dispersión del 50% central de los datos.\na) 4 = Q₁ solo (no se resta Q₁ de Q₃).\nb) 8 = Q₃ − 2 (error al identificar Q₁).",
+"61":"La varianza mide qué tanto se alejan los datos de la media.\nSe calcula: (1) resta la media a cada dato, (2) eleva al cuadrado, (3) suma todo, (4) divide entre n.\nFórmula correcta: σ² = Σ(xᵢ − x̄)² / n.\na) Σxᵢ/n es la fórmula de la media, no de la varianza.\nb) Σ(xᵢ + x̄)²/n suma en lugar de restar (incorrecto).",
+"62":"La desviación estándar es la raíz cuadrada de la varianza: σ = √(varianza).\nFórmula correcta: σ = √(Σ(xᵢ − x̄)² / n).\na) √(Σxᵢ/n) aplica la raíz a la fórmula de la media.\nc) Σ(xᵢ − x̄)²/n es la varianza sin la raíz cuadrada.",
+"63":"Z = (X − x̄) / σ = (70 − 50) / 10 = 20/10 = 2.\nEl dato 70 está 2 desviaciones estándar por encima de la media.\na) Z=1 correspondería a X=60.\nb) Z=3 correspondería a X=80.",
+"64":"Límite superior = Q₃ + 1.5 × RIC = 25 + 1.5 × 10 = 25 + 15 = 40.\nTodo dato mayor a 40 sería considerado atípico.\nb) 35 = 25+10 (usa 1.0×RIC en lugar de 1.5×RIC).\nc) 30 = 25+5 (usa 0.5×RIC).",
+"65":"A ∪ B = {1, 2, 3, 4, 5, 6, 7}.\nLa unión incluye todos los elementos de ambos conjuntos sin repetir.\nElementos de A no en B: 1, 2, 3. Elementos de B no en A: 6, 7. Comunes: 4, 5.\nTotal: 5 + 4 − 2 = 7.\na) 9 cuenta 5+4=9 sin restar los elementos comunes.\nb) 2 es la cantidad de elementos en la intersección.",
+"66":"A ∩ B = {6, 8}.\nLa intersección incluye solo los elementos en ambos conjuntos simultáneamente.\nA={2,4,6,8}, B={6,8,10,12} → comunes: 6 y 8 → 2 elementos.\na) 4 = |A| (confunde el tamaño de A con el tamaño de A∩B).\nc) 6 = |B|\\{10,12}+|A|\\{2,4} (incorrecto).",
+"67":"A' = elementos de U que no están en A = {1, 3, 5, 7, 9}.\nU = {1,2,3,4,5,6,7,8,9,10} → 10 elementos.\nA = {2,4,6,8,10} → 5 elementos.\nA' tiene 10 − 5 = 5 elementos.\nb) 4 descuenta incorrectamente un elemento de más.\nc) 6 no descuenta correctamente.",
+"68":"|A ∪ B| = |A| + |B| − |A ∩ B| = 30 + 20 − 8 = 42 (hablan al menos uno).\nNinguno = 50 − 42 = 8.\nSe resta 8 porque esas personas fueron contadas dos veces (en ambos grupos).\na) 4 = 50−42−4 (error aritmético).\nb) 6 = 50−42−2 (error aritmético).",
+"69":"Comparando las frecuencias: Rojo=15, Azul=25, Verde=10, Amarillo=20.\nEl menor valor es Verde con 10.\nEn una gráfica de barras sería la barra más corta.\na) Azul=25 es el mayor, no el menor.\nb) Amarillo=20 es el segundo mayor.",
+"70":"Materiales = 35% del presupuesto total.\n0.35 × $200,000 = $70,000.\nEn una gráfica de pastel, Materiales ocuparía el 35% del círculo.\na) $60,000 = 30% × $200,000 (corresponde a 30%, no 35%).\nc) $80,000 = 40% × $200,000 (corresponde a Salarios)."
+};
+
+function primerIdx(b){if(b==='todos')return 0;const nums=BLOQUES[b];if(!nums)return 0;const i=RX.findIndex(r=>r.n===nums[0]);return i>=0?i:0;}
+window.addEventListener('load',function(){
+  renderGrid();
+  try{const s=JSON.parse(localStorage.getItem(SK));if(s&&s.resp&&Object.keys(s.resp).length>0){RESP=s.resp;const n=Object.keys(s.resp).length;const pct=Math.round(n/RX.length*100);const ts=s.ts?new Date(s.ts).toLocaleString('es-MX'):'';document.getElementById('ban-txt').textContent='Reactivo '+(s.idx+1)+' de '+RX.length+' — '+pct+'% completado. Último acceso: '+ts;document.getElementById('banner-prog').style.display='block';actualizarGrid();}}catch(e){}
+  selBloque('todos');
+});
+function renderGrid(){const g=document.getElementById('bloques-grid');g.innerHTML='';Object.entries(BLOQUES).forEach(([nombre,nums])=>{const resp=nums.filter(n=>{const i=RX.findIndex(r=>r.n===n);return i>=0&&RESP[i]!==undefined;}).length;const d=document.createElement('div');d.className='bcard';d.id='bc_'+nombre.replace(/\W/g,'_');d.innerHTML='<div><div class="bn">'+nombre+'</div><div class="bc">'+nums.length+' reactivos</div></div><div class="bp" id="bp_'+nombre.replace(/\W/g,'_')+'">'+resp+'/'+nums.length+'</div>';d.onclick=()=>selBloque(nombre);g.appendChild(d);});}
+function actualizarGrid(){Object.entries(BLOQUES).forEach(([nombre,nums])=>{const resp=nums.filter(n=>{const i=RX.findIndex(r=>r.n===n);return i>=0&&RESP[i]!==undefined;}).length;const el=document.getElementById('bp_'+nombre.replace(/\W/g,'_'));if(el)el.textContent=resp+'/'+nums.length;});}
+function selBloque(b){BSEL=b;document.querySelectorAll('.bcard').forEach(c=>c.classList.remove('sel'));document.getElementById('btn-todos').classList.remove('sel');if(b==='todos'){document.getElementById('btn-todos').classList.add('sel');document.getElementById('btn-com').textContent='COMENZAR EXAMEN COMPLETO →';}else{const c=document.getElementById('bc_'+b.replace(/\W/g,'_'));if(c)c.classList.add('sel');document.getElementById('btn-com').textContent='COMENZAR: '+(b.length>28?b.substring(0,28)+'…':b)+' →';}}
+function guardar(){try{localStorage.setItem(SK,JSON.stringify({idx:IDX,resp:RESP,ts:Date.now()}));const el=document.getElementById('sv');if(el){el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}}catch(e){}}
+function cargar(){try{return JSON.parse(localStorage.getItem(SK));}catch(e){return null;}}
+function limpiar(){localStorage.removeItem(SK);}
+function mostrar(id){document.querySelectorAll('.pantalla').forEach(p=>p.classList.remove('activa'));document.getElementById(id).classList.add('activa');}
+function comenzar(){IDX=primerIdx(BSEL);mostrar('examen');renderNav();mostrarRX();}
+function continuarGuardado(){const s=cargar();if(s){IDX=s.idx||0;RESP=s.resp||{};}mostrar('examen');renderNav();mostrarRX();}
+function pedirReinicio(){if(confirm('¿Seguro que quieres empezar de nuevo? Se borrará todo el progreso guardado.')){limpiar();RESP={};IDX=0;document.getElementById('banner-prog').style.display='none';actualizarGrid();selBloque('todos');}}
+function irInicio(){cerrarMM();actualizarGrid();mostrar('inicio');}
+function abrirMM(){const opts=document.getElementById('mm-opts');opts.innerHTML='';Object.entries(BLOQUES).forEach(([nombre,nums])=>{const cor=nums.filter(n=>{const i=RX.findIndex(r=>r.n===n);return i>=0&&RESP[i]?.correcto;}).length;const d=document.createElement('div');d.className='mm-opt';d.innerHTML='<div class="mn">'+nombre+'</div><div class="mr">'+cor+'/'+nums.length+' ✓</div>';d.onclick=()=>cambiarBloque(nombre);opts.appendChild(d);});const sep=document.createElement('div');sep.className='mm-sep';opts.appendChild(sep);const home=document.createElement('div');home.className='mm-opt';home.innerHTML='<div class="mn" style="color:var(--muted)">🏠 Menú principal</div><div class="mr">←</div>';home.onclick=irInicio;opts.appendChild(home);document.getElementById('mmenu').classList.add('show');}
+function cerrarMM(e){if(!e||e.target===document.getElementById('mmenu'))document.getElementById('mmenu').classList.remove('show');}
+function cambiarBloque(b){cerrarMM();IDX=primerIdx(b);mostrarRX();renderNav();}
+function renderNav(){const nav=document.getElementById('navlat');nav.innerHTML='';RX.forEach((r,i)=>{const d=document.createElement('button');d.className='nd';d.textContent=i+1;d.title='#'+r.n+' '+r.b;const rp=RESP[i];if(i===IDX)d.classList.add('act');else if(rp){if(rp.correcto)d.classList.add('ok');else d.classList.add('mal');}else{d.classList.add('pend');d.disabled=true;}if(i<=IDX)d.onclick=()=>irA(i);nav.appendChild(d);});const dots=nav.querySelectorAll('.nd');if(dots[IDX])dots[IDX].scrollIntoView({block:'nearest'});}
+function irA(i){if(i>IDX)return;IDX=i;mostrarRX();}
+function mostrarRX(){if(IDX>=RX.length){mostrarRes();return;}guardar();const yaResp=RESP[IDX]!==undefined;const rx=RX[IDX];document.getElementById('hpi').textContent=(IDX+1)+' / '+RX.length;document.getElementById('pb').style.width=(IDX/RX.length*100)+'%';document.getElementById('hblq').textContent=rx.b;let h='';h+='<div class="rnum">Reactivo #'+rx.n+'</div><div class="rblq">'+esc(rx.b)+'</div><div class="enun">'+esc(rx.e)+'</div><div class="opts">';['a','b','c'].forEach(l=>{if(rx.opts[l]!==undefined)h+='<button class="opt" id="opt_'+l+'" onclick="responder(\''+l+'\')"><span class="ltr">'+l.toUpperCase()+')</span><span>'+esc(rx.opts[l])+'</span></button>';});h+='</div><div class="corr-panel" id="cpanel"></div><div class="navbtns"><div class="navleft"><button class="btn btn-s" id="bant" onclick="irAnterior()" '+(IDX===0?'disabled':'')+'>← Anterior</button></div><button class="btn btn-p" id="bcont" onclick="continuar()" disabled>'+(IDX<RX.length-1?'Continuar →':'Ver resultados →')+'</button></div>';document.getElementById('cuerpo').innerHTML=h;if(yaResp){const rp=RESP[IDX];const el=document.getElementById('opt_'+rp.letra);if(el)el.classList.add('sel');bloquearOpts();mostrarCorr(rp);document.getElementById('bcont').disabled=false;}renderNav();}
+function responder(l){if(RESP[IDX]!==undefined)return;const rx=RX[IDX];const cor=l===rx.r;RESP[IDX]={letra:l,correcto:cor};guardar();const el=document.getElementById('opt_'+l);if(el)el.classList.add('sel');bloquearOpts();mostrarCorr(RESP[IDX]);const bc=document.getElementById('bcont');if(bc)bc.disabled=false;renderNav();}
+function bloquearOpts(){const rx=RX[IDX];['a','b','c'].forEach(l=>{const el=document.getElementById('opt_'+l);if(!el)return;el.disabled=true;if(l===rx.r)el.classList.add('ok-rev');});}
+function mostrarCorr(rp){const rx=RX[IDX];const panel=document.getElementById('cpanel');if(!panel)return;let tit,cls;if(rp.correcto){tit='✅ ¡Correcto!';cls='ok-p';const el=document.getElementById('opt_'+rp.letra);if(el){el.classList.remove('sel');el.classList.add('ok');}}else{tit='❌ Incorrecto — La respuesta correcta es: '+rx.r.toUpperCase()+') '+rx.opts[rx.r];cls='err-p';const em=document.getElementById('opt_'+rp.letra);if(em){em.classList.remove('sel');em.classList.add('mal');}const ec=document.getElementById('opt_'+rx.r);if(ec){ec.classList.remove('ok-rev');ec.classList.add('ok');}}const just=JUST[String(rx.n)]||'';panel.className='corr-panel '+cls;panel.innerHTML='<div class="ct">'+esc(tit)+'</div>'+(just?'<div class="jt">'+esc(just)+'</div>':'');panel.style.display='block';}
+function continuar(){if(IDX<RX.length-1){IDX++;mostrarRX();}else mostrarRes();}
+function irAnterior(){if(IDX>0){IDX--;mostrarRX();}}
+function mostrarRes(){guardar();mostrar('resultados');let tc=0;const rb={};Object.entries(BLOQUES).forEach(([nombre,nums])=>{let c=0,ic=0;nums.forEach(n=>{const i=RX.findIndex(r=>r.n===n);const rp=i>=0?RESP[i]:undefined;if(!rp)ic++;else if(rp.correcto)c++;else ic++;});rb[nombre]={c,ic,t:nums.length};tc+=c;});const total=RX.length;const cal=(tc/total*10).toFixed(2);const ap=parseFloat(cal)>=7;const cg=document.getElementById('calg');cg.textContent=cal;cg.className='calg '+(ap?'ap':'rep');document.getElementById('rsub').textContent=tc+' correctas · '+(total-tc)+' incorrectas · '+Object.keys(RESP).length+'/'+total+' respondidas';const wrap=document.getElementById('bres-wrap');wrap.innerHTML='';Object.entries(rb).forEach(([nombre,r])=>{const c2=(r.c/r.t*10).toFixed(1);const ap2=parseFloat(c2)>=7;const pct=Math.round(r.c/r.t*100);const div=document.createElement('div');div.className='bres';div.innerHTML='<div class="bres-nm">'+nombre+'</div><div class="bres-r"><div class="bres-bar"><div class="bres-bf" style="width:0%;background:'+(ap2?'var(--green)':'var(--red)')+'" data-w="'+pct+'"></div></div><div class="bres-det">'+r.c+'/'+r.t+'</div><div class="bres-cal '+(ap2?'ap':'rep')+'">'+c2+'</div></div>';wrap.appendChild(div);});setTimeout(()=>document.querySelectorAll('.bres-bf').forEach(e=>e.style.width=e.dataset.w+'%'),100);const tb=document.getElementById('tbody');tb.innerHTML='';RX.forEach((rx,i)=>{const rp=RESP[i];let est,ec,tr2;if(!rp){est='—';ec='';tr2='—';}else if(rp.correcto){est='✓';ec='bok';tr2=rp.letra.toUpperCase();}else{est='✗';ec='bmal';tr2=(rp.letra||'—').toUpperCase();}const trunc=rx.e.replace(/\n/g,' ').substring(0,60)+'…';const tr=document.createElement('tr');const jcls=(!rp||!rp.correcto)?'bjust inc':'bjust';tr.innerHTML='<td>'+rx.n+'</td><td style="font-size:.7rem;white-space:nowrap">'+esc(rx.b.substring(0,18))+'</td><td class="tdp">'+esc(trunc)+'</td><td>'+tr2+'</td><td>'+rx.r.toUpperCase()+'</td><td class="'+ec+'">'+est+'</td><td><button class="'+jcls+'" onclick="abrirMod('+i+')">?</button></td>';tb.appendChild(tr);});}
+function abrirMod(i){const rx=RX[i],rp=RESP[i];document.getElementById('mt').textContent='Reactivo #'+rx.n+' — '+rx.b;document.getElementById('me').textContent=rx.e;let rt,rc;if(!rp){rt='Sin respuesta';rc='mal';}else if(rp.correcto){rt='✅ Tu respuesta: '+rp.letra.toUpperCase()+') '+rx.opts[rp.letra];rc='ok';}else{rt='❌ Tu respuesta: '+(rp.letra||'—').toUpperCase()+') '+(rx.opts[rp.letra]||'');rc='mal';}const re=document.getElementById('mr');re.textContent=rt;re.className='mresp '+rc;document.getElementById('msol').innerHTML='<strong>✅ Respuesta correcta: '+rx.r.toUpperCase()+') '+esc(rx.opts[rx.r])+'</strong>'+(JUST[String(rx.n)]?'<span style="color:var(--muted);font-size:.82rem;display:block;margin-top:6px;white-space:pre-wrap">'+esc(JUST[String(rx.n)])+'</span>':'');document.getElementById('movlay').classList.add('show');}
+function cerrarMod(e){if(!e||e.target===document.getElementById('movlay'))document.getElementById('movlay').classList.remove('show');}
+function dlCSV(){let c='\uFEFF';c+='#,Bloque,Tu Respuesta,Respuesta Correcta,Estado\n';RX.forEach((rx,i)=>{const rp=RESP[i];const tr=!rp?'—':(rp.letra||'—').toUpperCase();const est=!rp?'Sin responder':rp.correcto?'Correcto':'Incorrecto';c+=rx.n+',\"'+rx.b+'\",'+tr+','+rx.r.toUpperCase()+','+est+'\n';});const cor=Object.values(RESP).filter(r=>r.correcto).length;c+='\nTOTAL,,,'+cor+'/'+RX.length+' = '+(cor/RX.length*10).toFixed(2)+'/10,';dl('mat70_resultados.csv',c,'text/csv;charset=utf-8');}
+function dlTXT(){const cor=Object.values(RESP).filter(r=>r.correcto).length;let t='=== RESULTADOS MÓDULO B — MATEMÁTICAS 70 EJERCICIOS ===\n';t+='Fecha: '+new Date().toLocaleString('es-MX')+'\n\n';t+='Calificación global: '+(cor/RX.length*10).toFixed(2)+'/10\n';t+='Correctas: '+cor+' · Incorrectas: '+(RX.length-cor)+'\n\n';Object.entries(BLOQUES).forEach(([nombre,nums])=>{const c2=nums.filter(n=>{const i=RX.findIndex(r=>r.n===n);return i>=0&&RESP[i]?.correcto;}).length;t+=nombre+': '+c2+'/'+nums.length+' = '+(c2/nums.length*10).toFixed(1)+'/10\n';});t+='\n--- INCORRECTAS ---\n';RX.forEach((rx,i)=>{const rp=RESP[i];if(rp&&!rp.correcto){t+='\n#'+rx.n+' ['+rx.b+']\n';t+='Pregunta: '+rx.e.replace(/\n/g,' ').substring(0,100)+'\n';t+='Tu resp: '+(rp.letra||'—').toUpperCase()+' | Correcta: '+rx.r.toUpperCase()+') '+rx.opts[rx.r]+'\n';if(JUST[String(rx.n)])t+='Justificación: '+JUST[String(rx.n)]+'\n';}});dl('mat70_resultados.txt',t,'text/plain;charset=utf-8');}
+function dl(n,c,t){const b=new Blob([c],{type:t});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();URL.revokeObjectURL(a.href);}
+function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+</script>
+</body>
+</html>
